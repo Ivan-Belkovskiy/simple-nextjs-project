@@ -1,13 +1,27 @@
+import "./page.css";
 import CounterBlock from "@/components/CounterBlock/CounterBlock";
+import { prisma } from "@/lib/prisma";
 import Image from "next/image";
 
-export default function Home() {
+export default async function Home() {
+  const tasks = await prisma.simple_task_manager__tasks.findMany();
   return (
     <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
+      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-center">
         <h1>The Simple Next.js App</h1>
         <hr />
+        {/* <div className="container flex flex-row items-center justify-center"> */}
         <CounterBlock />
+        <div className="task-list">
+          <h1>Список задач:</h1>
+          {tasks.map((task, idx) => (
+            <div className="task-list__item" key={idx}>
+              <span className="task-index">{idx + 1}</span>
+              <span className="task-name">{task.name}</span>
+            </div>
+          ))}
+        </div>
+        {/* </div> */}
         {/* <Image
           className="dark:invert"
           src="/next.svg"
